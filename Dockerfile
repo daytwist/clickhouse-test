@@ -1,15 +1,15 @@
-FROM golang:1.13-alpine
+FROM golang:1.23-alpine
 
-ENV VERSION v4.7.1
+ENV VERSION v4.17.1
 
-RUN apk add make vim --no-cache git
-
-RUN go get -v -d github.com/golang-migrate/migrate/cli \
-  && go get -v -d github.com/lib/pq
+RUN apk add --no-cache make vim git
 
 WORKDIR /go/src/github.com/golang-migrate/migrate
 
-RUN git checkout ${VERSION} \
-  && go build -tags 'clickhouse' -o ./bin/migrate ./cli
+RUN git clone https://github.com/golang-migrate/migrate.git . \
+  && git checkout ${VERSION} \
+  && go mod download
+
+RUN go build -tags 'clickhouse' -o ./bin/migrate ./cli
 
 WORKDIR /src
