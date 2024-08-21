@@ -13,6 +13,9 @@ services:
       dockerfile: Dockerfile
     container_name: "ch_migrate"
     volumes:
+      - .:/src
       - ./migrations:/src/migrations
       - ./Makefile:/src/Makefile
     tty: true
+    depends_on:
+      - clickhouse
